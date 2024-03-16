@@ -141,10 +141,14 @@ class HBNBCommand(cmd.Cmd):
                 continue
             new_instance_dict[key] = value
 
+        if 'created_at' not in new_instance_dict:
+            new_instance_dict['created_at'] = datetime.now()
+        if 'updated_at' not in new_instance_dict:
+            new_instance_dict['updated_at'] = datetime.now()
+
         new_instance = self.classes[args[0]](**new_instance_dict)
         storage.save()
         print(new_instance.id)
-        storage.save()
 
     def help_create(self):
         """ Help information for the create method """
