@@ -10,7 +10,7 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
-
+from datetime import datetime
 
 class HBNBCommand(cmd.Cmd):
     """ Contains the functionality for the HBNB console"""
@@ -140,11 +140,6 @@ class HBNBCommand(cmd.Cmd):
             else:
                 continue
             new_instance_dict[key] = value
-
-        if 'created_at' not in new_instance_dict:
-            new_instance_dict['created_at'] = datetime.now()
-        if 'updated_at' not in new_instance_dict:
-            new_instance_dict['updated_at'] = datetime.now()
 
         new_instance = self.classes[args[0]](**new_instance_dict)
         storage.save()

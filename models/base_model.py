@@ -2,25 +2,39 @@
 """This module defines a base class for all models in our hbnb clone"""
 import uuid
 from datetime import datetime
-
+import models
 
 class BaseModel:
     """A base class for all hbnb models"""
     def __init__(self, *args, **kwargs):
-        """Instatntiates a new model"""
+        """ CON
+        """
+
+        "IOS attribute to use in iosformate"
+        IOS = "%Y-%m-%dT%H:%M:%S.%f"
         if not kwargs:
             from models import storage
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
-            storage.new(self)
-        else:
-            kwargs['updated_at'] = datetime.strptime(kwargs['updated_at'],
-                                                     '%Y-%m-%dT%H:%M:%S.%f')
-            kwargs['created_at'] = datetime.strptime(kwargs['created_at'],
-                                                     '%Y-%m-%dT%H:%M:%S.%f')
-            del kwargs['__class__']
-            self.__dict__.update(kwargs)
+
+        if kwargs and kwargs != {}:
+            for K, V in kwargs.items():
+                if K == "created_at" or K == "updated_at":
+                    self.__dict__[K] = datetime.strptime(V, IOS)
+                else:
+                    if K != "__class__":
+                        setattr(self, K, V)
+
+            if 'id' not in kwargs:
+                kwargs['id'] = str(uuid.uuid4())
+
+            if 'created_at' not in kwargs:
+                kwargs['created_at'] = datetime.now()
+
+            if 'updated_at' not in kwargs:
+                kwargs['updated_at'] = datetime.now()
+            models.storage.new(self)
 
     def __str__(self):
         """Returns a string representation of the instance"""
@@ -31,6 +45,7 @@ class BaseModel:
         """Updates updated_at with current time when instance is changed"""
         from models import storage
         self.updated_at = datetime.now()
+        models.storage.new(self)
         storage.save()
 
     def to_dict(self):
