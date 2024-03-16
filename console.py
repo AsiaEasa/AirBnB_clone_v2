@@ -123,28 +123,28 @@ class HBNBCommand(cmd.Cmd):
         if args[0] not in self.classes:
             print("** class doesn't exist **")
             return
-        new_instance_dict = {}
+        NEW = {}
 
-        for param in args[1:]:
-            split_param = param.split('=')
-            if len(split_param) != 2:
+        for PA in args[1:]:
+            split_PA = PA.split('=')
+            if len(split_PA) != 2:
                 continue
-            key, value = split_param
+            K, V = split_PA
 
-            if value.startswith('"') and value.endswith('"'):
-                value = value[1:-1]
-                value = value.replace('\\"', '"').replace('_', ' ')
-            elif '.' in value and all(part.isdigit() for part in value.split('.')):
-                value = float(value)
-            elif value.isdigit():
-                value = int(value)
+            if V.startswith('"') and V.endswith('"'):
+                V = V[1:-1]
+                V = V.replace('\\"', '"').replace('_', ' ')
+            elif '.' in V and all(part.isdigit() for part in V.split('.')):
+                V = float(V)
+            elif V.isdigit():
+                V = int(V)
             else:
                 continue
-            new_instance_dict[key] = value
+            NEW[K] = V
 
-        new_instance = self.classes[args[0]](**new_instance_dict)
+        new_instance = self.classes[args[0]](**NEW)
         storage.save()
-        print(new_instance.id)
+        print(NEW.id)
 
     def help_create(self):
         """ Help information for the create method """
