@@ -14,43 +14,37 @@ from models.amenity import Amenity
 
 
 class DBStorage:
-    """ create tables in environmental"""
+    """This class manages storage of hbnb models in a database"""
     __engine = None
     __session = None
 
     def __init__(self):
-        user = getenv("HBNB_MYSQL_USER")
-        passwd = getenv("HBNB_MYSQL_PWD")
-        db = getenv("HBNB_MYSQL_DB")
-        host = getenv("HBNB_MYSQL_HOST")
-        env = getenv("HBNB_ENV")
+        USER = getenv("HBNB_MYSQL_USER")
+        PASS = getenv("HBNB_MYSQL_PWD")
+        HOST = getenv("HBNB_MYSQL_HOST")
+        DB = getenv("HBNB_MYSQL_DB")
 
         self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'
-                                      .format(user, passwd, host, db),
+                                      .format(USER, PASS, HOST, DB),
                                       pool_pre_ping=True)
 
-        if env == "test":
+        if getenv("HBNB_ENV") == "test":
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
-        """returns a dictionary
-        Return:
-            returns a dictionary of __object
-        """
+        """Query on the current database session all objects"""
         dic = {}
         if cls:
             if type(cls) is str:
                 cls = eval(cls)
             query = self.__session.query(cls)
             for elem in query:
-                key = "{}.{}".format(type(elem).__name__, elem.id)
+                key = f"{type(elem).__name__}.{elem.id}"
                 dic[key] = elem
         else:
-            lista = [State, City, User, Place, Review, Amenity]
-            for clase in lista:
-                query = self.__session.query(clase)
-                for elem in query:
-                    key = "{}.{}".format(type(elem).__name__, elem.id)
+            for clase in Base.__subclasses__():
+                for elem in self.__session.query(clase):
+                    key = f"{type(elem).__name__}.{elem.id}"
                     dic[key] = elem
         return (dic)
 
