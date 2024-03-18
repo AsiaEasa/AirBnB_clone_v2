@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 """This is the base model class for AirBnB"""
-from sqlalchemy.ext.declarative import declarative_base
 import uuid
-import models
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, String, DateTime
+import models
 
 
 Base = declarative_base()
@@ -37,21 +37,13 @@ class BaseModel:
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
 
-    def __str__(self):
-        """returns a string
-        Return:
-            returns a string of class name, id, and dictionary
+        """ To handle print()
         """
-        return "[{}] ({}) {}".format(
-            type(self).__name__, self.id, self.__dict__)
 
-    def __repr__(self):
-        """return a string representaion
-        """
-        return self.__str__()
+        return f"[{type(self).__name__}] ({self.id}) {self.__dict__}"
 
     def save(self):
-        """updates the public instance attribute updated_at to current
+        """ UPDATE the public instance attribute updated_at
         """
         self.updated_at = datetime.now()
         models.storage.new(self)
@@ -71,6 +63,5 @@ class BaseModel:
         return my_dict
 
     def delete(self):
-        """ delete object
-        """
+        """ Deletes the current instance from the storage """
         models.storage.delete(self)
