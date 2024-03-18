@@ -11,29 +11,21 @@ Base = declarative_base()
 
 
 class BaseModel:
-    """This class will defines all common attributes/methods
-    for other classes
-    """
+    """A base class for all hbnb models"""
     id = Column(String(60), unique=True, nullable=False, primary_key=True)
     created_at = Column(DateTime, nullable=False, default=(datetime.utcnow()))
     updated_at = Column(DateTime, nullable=False, default=(datetime.utcnow()))
 
     def __init__(self, *args, **kwargs):
-        """Instantiation of base model class
-        Args:
-            args: it won't be used
-            kwargs: arguments for the constructor of the BaseModel
-        Attributes:
-            id: unique id generated
-            created_at: creation date
-            updated_at: updated date
-        """
-        if kwargs:
-            for key, value in kwargs.items():
-                if key == "created_at" or key == "updated_at":
-                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
-                if key != "__class__":
-                    setattr(self, key, value)
+        """Instatntiates a new model"""
+        IOS = "%Y-%m-%dT%H:%M:%S.%f"
+        if kwargs and kwargs != {}:
+            for K, V in kwargs.items():
+                if K == "created_at" or K == "updated_at":
+                    self.__dict__[K] = datetime.strptime(V, IOS)
+                else:
+                    if K != "__class__":
+                        setattr(self, K, V)
             if "id" not in kwargs:
                 self.id = str(uuid.uuid4())
             if "created_at" not in kwargs:
@@ -42,7 +34,8 @@ class BaseModel:
                 self.updated_at = datetime.now()
         else:
             self.id = str(uuid.uuid4())
-            self.created_at = self.updated_at = datetime.now()
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
 
     def __str__(self):
         """returns a string
