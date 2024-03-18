@@ -40,7 +40,6 @@ class BaseModel:
     def __str__(self):
         """ To handle print()
         """
-
         return f"[{type(self).__name__}] ({self.id}) {self.__dict__}"
 
     def save(self):
@@ -51,17 +50,16 @@ class BaseModel:
         models.storage.save()
 
     def to_dict(self):
-        """creates dictionary of the class  and returns
-        Return:
-            returns a dictionary of all the key values in __dict__
-        """
-        my_dict = dict(self.__dict__)
-        my_dict["__class__"] = str(type(self).__name__)
-        my_dict["created_at"] = self.created_at.isoformat()
-        my_dict["updated_at"] = self.updated_at.isoformat()
-        if '_sa_instance_state' in my_dict.keys():
-            del my_dict['_sa_instance_state']
-        return my_dict
+        """Convert instance into dict format"""
+        dict_C = self.__dict__.copy()
+        K = ["created_at", "updated_at"]
+        for KEY, V in self.__dict__.items():
+            if KEY in K:
+                dict_C[KEY] = V.isoformat()
+        dict_C['__class__'] = self.__class__.__name__
+        if "_sa_instance_state" in dict_C:
+            del dict_C["_sa_instance_state"]
+        return dict_C
 
     def delete(self):
         """ Deletes the current instance from the storage """
