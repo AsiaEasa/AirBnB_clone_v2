@@ -18,24 +18,21 @@ class BaseModel:
 
     def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""
-        IOS = "%Y-%m-%dT%H:%M:%S.%f"
-        if kwargs and kwargs != {}:
-            for K, V in kwargs.items():
-                if K == "created_at" or K == "updated_at":
-                    self.__dict__[K] = datetime.strptime(V, IOS)
-                else:
-                    if K != "__class__":
-                        setattr(self, K, V)
-            if "id" not in kwargs:
-                self.id = str(uuid.uuid4())
-            if "created_at" not in kwargs:
-                self.created_at = datetime.now()
-            if "updated_at" not in kwargs:
-                self.updated_at = datetime.now()
-        else:
+        if not kwargs:
+            from models import storage
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
+        else:
+            self.created_at = datetime.strptime(kwargs.get(
+                    'created_at', datetime.now().strftime(
+                     '%Y-%m-%dT%H:%M:%S.%f')), '%Y-%m-%dT%H:%M:%S.%f')
+            self.updated_at = datetime.strptime(kwargs.get(
+                    'updated_at', datetime.now().strftime(
+                     '%Y-%m-%dT%H:%M:%S.%f')), '%Y-%m-%dT%H:%M:%S.%f')
+            for key, value in kwargs.items():
+                if key not in ['created_at', 'updated_at']:
+                    setattr(self, key, value)
 
     def __str__(self):
         """ To handle print()
