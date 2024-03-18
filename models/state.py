@@ -7,6 +7,7 @@ from sqlalchemy import Column, Integer, String
 import models
 from models.city import City
 import shlex
+from models import storage
 
 
 class State(BaseModel, Base):
@@ -18,8 +19,6 @@ class State(BaseModel, Base):
 
     @property
     def cities(self):
-            """Getter attribute that returns the list of City instances with state_id equal to the current State.id"""
-            from models import storage
             city_list = []
             for city in storage.all(City).values():
                 if city.state_id == self.id:
