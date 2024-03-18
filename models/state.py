@@ -8,6 +8,8 @@ import models
 from models.city import City
 import shlex
 from models import storage
+from sqlalchemy import ForeignKey
+from sqlalchemy.ext.declarative import declarative_base
 
 
 class State(BaseModel, Base):
@@ -19,8 +21,15 @@ class State(BaseModel, Base):
 
     @property
     def cities(self):
-        city_list = []
-        for city in storage.all(City).values():
-            if city.state_id == self.id:
-                city_list.append(city)
-        return city_list
+        var = models.storage.all()
+        lista = []
+        result = []
+        for key in var:
+            city = key.replace('.', ' ')
+            city = shlex.split(city)
+            if (city[0] == 'City'):
+                lista.append(var[key])
+        for elem in lista:
+            if (elem.state_id == self.id):
+                result.append(elem)
+        return (result)
