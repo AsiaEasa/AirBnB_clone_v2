@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""This is the place class"""
+""" Place Module for HBNB project """
 from sqlalchemy.ext.declarative import declarative_base
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, Table, String, Integer, Float, ForeignKey
@@ -8,9 +8,7 @@ import models
 
 
 class Place(BaseModel, Base):
-    """
-    This is the class for Place
-    """
+    """ A place to stay """
     __tablename__ = "places"
     city_id = Column(String(60), ForeignKey("cities.id"), nullable=False)
     user_id = Column(String(60), ForeignKey("users.id"), nullable=False)
