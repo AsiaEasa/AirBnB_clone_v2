@@ -33,20 +33,19 @@ class DBStorage:
 
     def all(self, cls=None):
         """Query on the current database session all objects"""
-        dic = {}
+        D = {}
         if cls:
-            if type(cls) is str:
+            if isinstance(cls, str):
                 cls = eval(cls)
-            query = self.__session.query(cls)
-            for elem in query:
-                key = f"{type(elem).__name__}.{elem.id}"
-                dic[key] = elem
+            for QU in self.__session.query(cls):
+                K = f"{type(QU).__name__}.{QU.id}"
+                D[K] = QU
         else:
             for clase in Base.__subclasses__():
-                for elem in self.__session.query(clase):
-                    key = f"{type(elem).__name__}.{elem.id}"
-                    dic[key] = elem
-        return (dic)
+                for QU in self.__session.query(clase):
+                    K = f"{type(QU).__name__}.{QU.id}"
+                    D[K] = QU
+        return (D)
 
     def new(self, obj):
         """add a new element in the table
