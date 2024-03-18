@@ -45,21 +45,15 @@ class BaseModel:
     def save(self):
         """ UPDATE the public instance attribute updated_at
         """
-        self.updated_at = datetime.now()
-        models.storage.new(self)
-        models.storage.save()
-
-    def to_dict(self):
-        """Convert instance into dict format"""
-        dict_C = self.__dict__.copy()
-        K = ["created_at", "updated_at"]
-        for KEY, V in self.__dict__.items():
-            if KEY in K:
-                dict_C[KEY] = V.isoformat()
-        dict_C['__class__'] = self.__class__.__name__
-        if "_sa_instance_state" in dict_C:
-            del dict_C["_sa_instance_state"]
-        return dict_C
+        dictionary = {}
+        dictionary.update(self.__dict__)
+        dictionary.update({'__class__':
+                          (str(type(self)).split('.')[-1]).split('\'')[0]})
+        dictionary['created_at'] = self.created_at.isoformat()
+        dictionary['updated_at'] = self.updated_at.isoformat()
+        if "_sa_instance_state" in dictionary:
+            del dictionary["_sa_instance_state"]
+        return dictionary
 
     def delete(self):
         """ Deletes the current instance from the storage """
