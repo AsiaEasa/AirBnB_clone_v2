@@ -48,30 +48,25 @@ class DBStorage:
         return (D)
 
     def new(self, obj):
-        """add a new element in the table
-        """
+        """add the object to the current database session"""
         self.__session.add(obj)
 
     def save(self):
-        """save changes
-        """
+        """commit all changes of the current database session"""
         self.__session.commit()
 
     def delete(self, obj=None):
-        """delete an element in the table
-        """
+        """ delete from the current database session"""
         if obj:
             self.session.delete(obj)
 
     def reload(self):
-        """configuration
-        """
+        """Create all tables in the database"""
         Base.metadata.create_all(self.__engine)
-        sec = sessionmaker(bind=self.__engine, expire_on_commit=False)
-        Session = scoped_session(sec)
+        S = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        Session = scoped_session(S)
         self.__session = Session()
 
     def close(self):
-        """ calls remove()
-        """
+        """Close the session"""
         self.__session.close()
