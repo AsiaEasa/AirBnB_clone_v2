@@ -4,8 +4,6 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, ForeignKey
 import models
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import relationship
-from models.place import Place
 from sqlalchemy.ext.declarative import declarative_base
 
 
