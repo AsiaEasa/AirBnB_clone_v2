@@ -17,12 +17,11 @@ class State(BaseModel, Base):
                           cascade="all, delete-orphan")
 
     def cities(self):
-        ''' Retrieve all objects from storage'''
-        objects = models.storage.all()
+        """getter attribute cities"""
         cities_list = []
-        for key, obj in objects.items():
-            city_name = key.replace('.', ' ')
-            city_parts = shlex.split(city_name)
-            if city_parts[0] == 'City' and obj.state_id == self.id:
-                cities_list.append(obj)
+        for K, V in models.storage.all().items():
+            NAME = key.replace('.', ' ')
+            PART = shlex.split(NAME)
+            if PART[0] == 'City' and V.state_id == self.id:
+                cities_list.append(V)
         return cities_list
