@@ -16,15 +16,13 @@ class State(BaseModel, Base):
     cities = relationship("City", backref="state",
                           cascade="all, delete-orphan")
 
-        @property
-        def cities(self):
-            """getter for the cities attribute
-            * returns the list of City instances with state_id equals
-            to the current State.id
-            * It will be the FileStorage relationship between State and
-            City
-            """
-            from models import storage
-            all_cities = storage.all(City)
-            return [city for city in all_cities.values()
-                    if city.state_id == self.id]
+    def cities(self):
+        ''' Retrieve all objects from storage'''
+        objects = models.storage.all()
+        cities_list = []
+        for key, obj in objects.items():
+            city_name = key.replace('.', ' ')
+            city_parts = shlex.split(city_name)
+            if city_parts[0] == 'City' and obj.state_id == self.id:
+                cities_list.append(obj)
+        return cities_list
