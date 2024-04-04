@@ -17,7 +17,7 @@ def do_pack():
     )
     local(f"tar -cvzf {F} web_static")
 
-    if os.path.exists(FN):
-        return FN
+    if os.path.exists(F):
+        return F
     else:
         return None
