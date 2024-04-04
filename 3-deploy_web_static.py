@@ -6,7 +6,7 @@ Fabric script that generates a tgz  AirBnB Clone repo
 from fabric.api import env, local, put, run
 from datetime import datetime
 from os.path import exists, isdir
-env.hosts = ["100.25.110.130", "3.86.7.109"]
+env.hosts = ["54.197.107.140", "54.166.14.2"]
 
 
 def do_pack():
