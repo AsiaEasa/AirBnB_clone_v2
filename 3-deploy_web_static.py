@@ -8,17 +8,20 @@ env.hosts = ["54.197.107.140", "54.166.14.2"]
 
 
 def do_pack():
-    """
-    Generates a tgz archive in the web_static folder
-    """
-    try:
-        date = datetime.now().strftime("%Y%m%d%H%M%S")
-        if isdir("versions") is False:
-            local("mkdir versions")
-        archive = "versions/web_static_{}.tgz".format(date)
-        local("tar -cvzf {} web_static".format(archive))
-        return archive
-    except:
+    """Function do pack"""
+    if not os.path.exists("versions"):
+        os.makedirs("versions")
+
+    N = datetime.now()
+    F = (
+        f"versions/web_static_{N.strftime('%Y%m%d_%H%M%S')}"
+        + ".tgz"
+    )
+    local(f"tar -cvzf {F} web_static")
+
+    if os.path.exists(F):
+        return F
+    else:
         return None
 
 
@@ -46,7 +49,7 @@ def do_deploy(archive_path):
 
 def deploy():
     """Deploys the web_static"""
-    archive_path = do_pack()
-    if archive_path is None:
+    AP = do_pack()
+    if AP is None:
         return False
-    return do_deploy(archive_path)
+    return do_deploy(AP)
