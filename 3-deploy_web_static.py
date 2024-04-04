@@ -1,28 +1,28 @@
 #!/usr/bin/python3
-"""
-Fabric script that generates a tgz  AirBnB Clone repo
-"""
+"""Fabric script"""
 
-from fabric.api import env, local, put, run
+from fabric.api import local, env, run, put
+import os
 from datetime import datetime
-from os.path import exists, isdir
 env.hosts = ["54.197.107.140", "54.166.14.2"]
 
 
 def do_pack():
-    """
-    Generates a tgz archive in the web_static folder
-    """
-    try:
-        date = datetime.now().strftime("%Y%m%d%H%M%S")
-        if isdir("versions") is False:
-            local("mkdir versions")
-        archive = "versions/web_static_{}.tgz".format(date)
-        local("tar -cvzf {} web_static".format(archive))
-        return archive
-    except:
-        return None
+    """Function do pack"""
+    if not os.path.exists("versions"):
+        os.makedirs("versions")
 
+    N = datetime.now()
+    F = (
+        f"versions/web_static_{N.strftime('%Y%m%d_%H%M%S')}"
+        + ".tgz"
+    )
+    local(f"tar -cvzf {F} web_static")
+
+    if os.path.exists(F):
+        return F
+    else:
+        return None
 
 def do_deploy(archive_path):
     """distributes an archive to the web servers"""
@@ -41,12 +41,11 @@ def do_deploy(archive_path):
         run('rm -rf /data/web_static/current')
         run('ln -s {}{}/ /data/web_static/current'.format(path, no_ext))
         return True
-    except Exception as e:
+    except:
         return False
 
-
 def deploy():
-    """creates anrs"""
+    """Deploys the web_static"""
     archive_path = do_pack()
     if archive_path is None:
         return False
