@@ -5,9 +5,9 @@ Fabric script (based on the file 1-pack_web_static.py)
 from fabric.api import *
 import os
 
-
 env.user = 'ubuntu'
 env.hosts = ["54.197.107.140", "54.166.14.2"]
+
 
 def do_deploy(archive_path):
     """Distributes an archive"""
@@ -27,5 +27,5 @@ def do_deploy(archive_path):
         run(f"ln -s {AP} /data/web_static/current")
         print("New version deployed!")
         return True
-    except:
+    except Exception as e:
         return False
